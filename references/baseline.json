@@ -1,0 +1,50 @@
+{
+  "confirmed_at": "2026-10-22",
+  "config_directory": "~/Library/Application Support/io.github.clash-verge-rev.clash-verge-rev",
+  "fixed_proxy": "🇺🇸 IPRoyal 固定出口",
+  "expected_exit_ipv4": "207.90.214.106",
+  "expected_country": "US",
+  "proxy_server": "207.90.214.106",
+  "proxy_port": 12324,
+  "dialer_group": "🚀 节点选择",
+  "claude_group": "🤖 Claude",
+  "historical_dialer_selection": "🇺🇲 美国 01",
+  "mode": "rule",
+  "tun_enabled": true,
+  "domain_suffixes": ["anthropic.com", "claude.ai", "claude.com", "clau.de", "claudemcpclient.com", "claudemcpcontent.com", "claudeusercontent.com"],
+  "exact_domains": ["anthropic.auth0.com", "servd-anthropic-website.b-cdn.net", "anthropic.com.cdn.cloudflare.net", "anthropic-com.ghost.io"],
+  "stun_hosts": ["stun.l.google.com", "stun.cloudflare.com"],
+  "intercom_host": "nexus-websocket-a.intercom.io",
+  "intercom_process": "Claude Helper",
+  "desktop_auxiliary": {
+    "confirmed_at": "2026-10-22",
+    "process_name": "Claude Helper",
+    "process_path_prefix": "/Applications/Claude.app/",
+    "widget_host": "widget.intercom.io",
+    "hcaptcha_suffix": "hcaptcha.com"
+  },
+  "dns": {
+    "confirmed_at": "2026-10-22",
+    "public_nameservers": [
+      "https://1.1.1.1/dns-query#🇺🇸 IPRoyal 固定出口",
+      "https://1.0.0.1/dns-query#🇺🇸 IPRoyal 固定出口"
+    ],
+    "persistent_script": "profiles/Script.js",
+    "company_domain": "ziyondpharma.com",
+    "company_nameservers": ["192.168.10.40", "192.168.10.43", "192.168.10.46"],
+    "company_hosts": {},
+    "company_unpinned_hosts": ["email.ziyondpharma.com"],
+    "company_test_hosts": ["oa.ziyondpharma.com", "erp.ziyondpharma.com", "email.ziyondpharma.com"],
+    "company_wifi_nameserver_policy": {
+      "oa.ziyondpharma.com": ["dhcp://en0"],
+      "erp.ziyondpharma.com": ["dhcp://en0"],
+      "email.ziyondpharma.com": ["dhcp://en0"]
+    },
+    "company_public_nameserver_policy": {},
+    "feishu_nameserver_policy": {
+      "+.feishu.cn": ["https://dns.alidns.com/dns-query"],
+      "+.feishucdn.com": ["https://dns.alidns.com/dns-query"]
+    },
+    "bootstrap_exception_fields": ["default-nameserver", "proxy-server-nameserver", "proxy-server-nameserver-policy"]
+  }
+}

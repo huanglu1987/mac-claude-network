@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mac Claude 网络检测与修复"
+  short_description: "只读检查 Claude 出口、DNS、桌面辅助规则及业务例外；明确授权后才修复"
+  default_prompt: "使用 $mac-claude-network 只读检测这台 Mac 的 Claude 网络和 DNS，保留 OA/NC/邮件精确 Wi-Fi DHCP DNS、DIRECT及不固定 IP、其他公司内网与已批准飞书 DNS 例外、Claude Code、MCP 及其他配置；区分本机DNS和代理端解析、桌面widget/hCaptcha规则与真实流量，无hCaptcha样本保留待验证，不凭品牌或443端口判泄露，不自动探测、刷新缓存、修复或重载，不启动邮件或发送/重发邮件。"
