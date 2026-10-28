@@ -61,6 +61,16 @@ Claude Code/MCP 保护路径（只列存在情况/哈希，不展示值）：`~/
 
 证据：[修复与验证报告](/Users/huanglu/Documents/Codex/2026-10-16/new-chat/outputs/Claude桌面辅助连接修复-20261022-223031/修复与验证报告.md)，同目录 `verification-final.json`、`audit-final.json`、`help-panel-connections.json`、`desktop-final-connections.json`、`scoped-old-connections-closed.json`、`business-connection-checks.json`、`rule-scope-checks.json`。网络私有备份路径见该报告，可能含凭据，不复制到Skill或输出。
 
+## Word、Excel 和 Chrome 插件连接观察
+
+仅在用户要求检查插件时使用：先只读核对当前配置和已有 Mihomo 连接元数据，按目标域名、连接开始时间、进程、代理链及双向字节记录，不读取请求载荷、聊天、文档、Cookie 或凭据。若用户愿意配合，可让其关闭其他两个插件面板、分别重新打开一个面板后立即采样；不要发送消息或选择文档内容。旧连接和未变化的流量不能当作新操作样本。短连接可能在采样前结束，无样本应标记未验证；WebKit、Chrome 网络进程可能由多个应用、扩展或标签共用，时间相符只是支持归因的证据，不是唯一归属证明。
+
+2026-10-27（America/New_York）分开观察：Word 单独打开后观察到 `pivot.claude.ai` 连接走 `Claude → IPRoyal 固定出口` 且双向有数据；Excel 重新打开后观察到 `claude.ai`、`pivot.claude.ai` 新连接走相同链路并有双向数据。样本进程均为 `com.apple.WebKit.Networking`，不能独立证明进程属于对应 Office 插件，也不能证明所有辅助请求或远端看到的 IP。
+
+Chrome 面板重新打开后没有捕获新 Claude 连接，已有连接计数未变化，不能确认扩展出口。较早 Chrome `claude.ai`、`api.anthropic.com` 连接选中固定出口且双向有数据，但可能来自其他页面。只读检查发现当时 Chrome 扩展 `fcoeoabgfenejglbffodgkkbkcdhcgfn` 声明 `nativeMessaging`，代码使用 `connectNative`；本机 `com.anthropic.claude_browser_extension` 宿主允许该扩展，类型为 stdio，路径位于 Claude 应用内，相关宿主进程由 Chrome 启动。由此支持本地通信机制和宿主运行，不能证明该时刻有消息交换、具体载荷或所有扩展外网流量的出口。扩展版本、宿主及进程状态会变化，复查应重新取证，不把历史结果升级为当前通过。
+
+Mihomo 代理链反映所见连接的选路，不直接展示每个远端看到的 IP；仅在用户授权的实际出口测试中另行核实，不以终端或其他应用的 trace 代替插件证据。默认 `audit` 不执行插件交互、Native Messaging 通信、外网探测、缓存清理或配置修改，不把本节历史记录写入当前结果。Microsoft 的 Office 服务直连不等同 Claude 主连接直连，也不因此修改其他应用分流。
+
 ## DNS 验证与例外
 
 2026-10-20 已确认的公网 DNS 为 `https://1.1.1.1/dns-query#🇺🇸 IPRoyal 固定出口` 和 `https://1.0.0.1/dns-query#🇺🇸 IPRoyal 固定出口`，由既有全局 `profiles/Script.js` 的 `config.dns.nameserver` 赋值持久生成。仅改生成 YAML 不会持久生效。写法依据 [Mihomo DNS 文档](https://wiki.metacubex.one/config/dns/)。这是此用户当前基线，不是所有代理客户端的通用语法。

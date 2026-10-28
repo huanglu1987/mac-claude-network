@@ -66,6 +66,10 @@ API socket 优先检测 `/var/run/clash-verge-service/users/<uid>/verge-mihomo.s
 
 新增辅助规则仅加入审计基线与已知内核规则识别；现有 `repair` 命令范围不扩展，也不因本次 Skill 更新修改网络。以后辅助规则偏离时，先报告并在明确授权的局部范围处理。不得顺带扩展到所有 Intercom、所有进程、其他第三方或业务 DNS。
 
+### Word、Excel 和 Chrome 插件
+
+用户要求检查这些插件时，按 [插件连接观察方法与历史结果](references/repair-and-verify.md#word-excel-和-chrome-插件连接观察) 分别观察当前连接。共享 WebKit 或 Chrome 网络进程、时间相关性和配置规则均不独立证明插件归属或远端实际 IP；无新连接时保持未验证。默认只读，不自动打开、关闭或刷新面板，不发送消息或文档内容，不扩展代理规则。历史结果不能代替新一轮检查。
+
 ### Claude DNS 路径实测与默认观察
 
 按 [Claude DNS 路径实测方法与边界](references/repair-and-verify.md#claude-dns-路径实测方法与边界) 复查。2026-10-22 首轮、21:49 复测及 22:03 再检测均未发现所测 Claude 路径绕过 IPRoyal；最新一轮为 12 次 DNS 查询、4 个新 TLS、8 个 Claude 域名连接样本，固定链权威对照仅见 Cloudflare，Google 仅见于普通美国01对照。分轮证据见引用记录，不累计样本；这是带时间和范围的实测结果，不是永久基线。
