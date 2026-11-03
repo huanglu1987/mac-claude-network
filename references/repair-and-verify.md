@@ -196,6 +196,18 @@ Mihomo 代理链反映所见连接的选路，不直接展示每个远端看到�
 
 证据：[再检测报告](/Users/huanglu/Documents/Codex/2026-10-16/new-chat/outputs/Claude-DNS路径再检测-20261022-220259/检测报告.md)，同目录 `actual-summary.json`、`claude-dns-and-tls.json`、`live-connections.json`、`controlled-connections.json`、`resolver-comparison.json`、`resolver-geo.json`、`verification.json`、`audit.json`、`Chrome-Claude-trace.txt`。具体进程/传输以 `verification.json` 的本轮逐项连接为准，不沿用旧轮描述。默认脚本及所有业务检查不变，实际测试状态仍 NOT_RUN、DNS 归因仍 UNVERIFIED；本历史记录不触发探测或修复。
 
+#### 2026-11-03 10:10 有限复测记录
+
+用户要求只读进一步检查 Claude DNS 路径，不改配置或清理缓存。10:09 的本地审计为配置 PASS，已有 Claude 连接快照含 5 个固定链样本；这些连接本身不能证明 DNS 路径。
+
+- 10:10:06–10:10:16（America/New_York），通过本地 Mihomo `/dns/query` 对 `claude.ai`、`api.anthropic.com`、`claude.com`、`anthropic.auth0.com` 查询 A 和 AAAA，8 次均为成功响应；两个新随机子域名各查询 A 和 AAAA，4 次均为 NXDOMAIN，属于有效否定响应。
+- 四次随机名称查询期间，分别观察到 `1.1.1.1` 或 `1.0.0.1` 的连接经 IPRoyal，且各查询窗口内至少一条此类连接有双向字节增长。443 端点也可能承载普通 HTTPS，背景流量可能混入；未解密载荷，不能将字节增长逐条归因于查询。
+- 通过已有本地代理按原始域名和 SNI 建立 4 条新 TLS 连接，证书校验通过、均为 TLS 1.3；按源端口关联 Mihomo 连接，4 条均为 `Claude → IPRoyal`。未认证 HEAD 根路径分别为 403、404、200、302，不能据此判断账号或完整业务可用性。
+- 单独使用新随机测试名称进行一次 Mihomo DNS 查询，第三方权威测试结果返回一个 Cloudflare 解析器地址 `172.68.53.158`。本轮未做普通美国01、固定链域名/IP 等其余独立对照，也未直接观察 Claude 的权威日志；不能将此单次结果当作全部路径的比较或逐条 Claude DNS 归因。未在本轮另测 Claude trace；此前网页 trace 是独立检测，不充作本轮证据。
+- 检测后默认配置审计为 PASS，92 个检查项通过；动态检查数量不是固定基线。本次未保存完整前后网络文件哈希或网络设置差异快照，不声称已逐项比对所有配置；未修改网络配置、切换策略或清理缓存，未发送聊天或邮件，也未重新验收 OA、NC、邮件和飞书业务。
+
+本轮仅支持“所测路径未发现绕过 IPRoyal 的证据”；未覆盖所有应用、未来请求、浏览器私有安全 DNS、所有 IPv6 路径或代理服务端内部解析。检测输出保留在本次会话中，未生成独立报告文件；默认 `audit` 的实际测试仍为 `NOT_RUN`、DNS 路径归因仍为 `UNVERIFIED`，不可将历史结果作为当前通过。
+
 ### 飞书 DNS 例外及故障复查
 
 2026-10-20 用户报告飞书文档变慢后，已授权备份并添加以下持久策略；不是让所有国内网站都使用国内 DNS：

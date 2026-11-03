@@ -72,7 +72,7 @@ API socket 优先检测 `/var/run/clash-verge-service/users/<uid>/verge-mihomo.s
 
 ### Claude DNS 路径实测与默认观察
 
-按 [Claude DNS 路径实测方法与边界](references/repair-and-verify.md#claude-dns-路径实测方法与边界) 复查。2026-10-22 首轮、21:49 复测及 22:03 再检测均未发现所测 Claude 路径绕过 IPRoyal；最新一轮为 12 次 DNS 查询、4 个新 TLS、8 个 Claude 域名连接样本，固定链权威对照仅见 Cloudflare，Google 仅见于普通美国01对照。分轮证据见引用记录，不累计样本；这是带时间和范围的实测结果，不是永久基线。
+按 [Claude DNS 路径实测方法与边界](references/repair-and-verify.md#claude-dns-路径实测方法与边界) 复查。2026-10-22 的三轮历史结果见引用记录；2026-11-03 10:10 的有限复测未发现所测路径绕过 IPRoyal 的证据，包含 12 次 DNS 查询、4 个新 TLS 连接及一次仅针对 Mihomo DNS 的独立测试域名权威对照。该轮未完成所有对照路径，不能证明每条 Claude DNS 查询均经固定出口。分轮证据不累计，不作为永久基线。
 
 默认 `dns.claude_path_observations` 仅从现有连接分类 Claude 域名范围、代理链、双向数据和是否观察到 IPv6 目标；`FIXED` 是业务连接路径，不等于 DNS 已实测通过。`dns_path_status=UNVERIFIED`，实际 DNS、新 TLS、权威记录对照状态始终 `NOT_RUN`。无样本保留未核实，非固定样本需要进一步归因。此字段不改变原有业务配置判据，不新增主动请求或网络修复；实际检测须使用新证据，不能把任何一轮历史样本写成当前结果。
 
