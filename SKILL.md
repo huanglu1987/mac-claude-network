@@ -78,7 +78,9 @@ API socket 优先检测 `/var/run/clash-verge-service/users/<uid>/verge-mihomo.s
 
 ## 语言、时区和固定 IP 定位
 
-见 [语言、时区与定位记录](references/repair-and-verify.md#语言时区与定位记录)。2026-10-20 用户授权后，Mac 已保存英语（美国）优先、中文第二及 `America/New_York`；Chrome 首选语言和重启后的 `Intl locale` 尚未核实。两家数据库对 `207.90.214.106` 的当次定位分别为 Ashburn / Washington，时区均为 `America/New_York`，不采用其他出口的洛杉矶定位。
+见 [语言、时区与定位记录](references/repair-and-verify.md#语言时区与定位记录)。2026-10-20 用户授权后，Mac 已保存英语（美国）优先、中文第二及 `America/New_York`；该时的 Chrome 首选语言和重启后的 `Intl locale` 尚未核实。两家数据库对 `207.90.214.106` 的当次定位分别为 Ashburn / Washington，时区均为 `America/New_York`，不采用其他出口的洛杉矶定位。
+
+2026-11-03 检测页当次显示浏览器语言 `en-US, zh-CN, zh`，页面 Intl 为 `en-US`；后来尝试移除中文语言时，Chrome 语言设置页没有正常显示，操作未完成，不能写成已移除。检测页结果是当次观察，不代替当前首选语言列表或其他 Chrome 配置文件的检查。详见上述记录的“Chrome 语言观察及未完成操作”。
 
 默认只读比较并分别报告系统设置、浏览器设置、页面检测和数据库查询日期。`audit` 已提供上述本地语言/地区及时区观察；它不检测浏览器 Intl、运行中应用的有效语言或在线定位，原有配置 PASS 也不覆盖这些项目。用户仅要求检测或更新 Skill 时，不改语言、地区、时区，不重启 Mac/Chrome，也不因 `zh-CN`、城市标签差异自动修复。固定 IP 定位是可变的数据库结果，不是精确物理位置或永久强制基线；需要复查时只查询已确认的 Claude 出口 IP。
 
