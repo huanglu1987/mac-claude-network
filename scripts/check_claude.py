@@ -895,6 +895,48 @@ def audit_dns(root, runtime, policy, live=None):
     return checks, summary
 
 
+def audit_diagnostic_site(root, extension, runtime, policy, live):
+    site = policy.get('diagnostic_site')
+    if not site:
+        return [], {'configuration_status': 'NOT_CONFIGURED', 'actual_exit_status': 'NOT_RUN',
+                    'https_record_status': 'NOT_RUN', 'ech_status': 'NOT_RUN'}
+    checks = []
+    fixed = policy['fixed_proxy']
+    def check(name, value, detail):
+        checks.append({'item': name, 'status': value, 'detail': detail})
+    for host in site['fixed_domains']:
+        rule = 'DOMAIN,' + host + ',' + fixed
+        check('diagnostic_persistent:' + host, 'PASS' if rule in extension.get('prepend', []) else 'FAIL',
+              'Exact persistent rule; actual route needs traffic')
+        target = first_target(runtime.get('rules', []), host)
+        check('diagnostic_generated:' + host, 'PASS' if target == fixed else ('UNVERIFIED' if target is None else 'FAIL'),
+              'First determinable generated rule: ' + str(target))
+        if live is None:
+            check('diagnostic_live:' + host, 'UNVERIFIED', 'Local controller unavailable')
+        else:
+            target = first_target(api_rule_strings(live['rules'].get('rules', []), policy), host)
+            check('diagnostic_live:' + host, 'PASS' if target == fixed else ('UNVERIFIED' if target is None else 'FAIL'),
+                  'First determinable live rule: ' + str(target))
+    host = site['fake_ip_exempt_domain']
+    dns = runtime.get('dns') or {}
+    mode = dns.get('fake-ip-filter-mode', 'blacklist')
+    filters = dns.get('fake-ip-filter') or []
+    ok = mode == 'blacklist' and host in filters
+    check('diagnostic_fake_ip_exception', 'PASS' if ok else 'FAIL',
+          'Exact generated blacklist exception; actual DNS response not tested')
+    script = root / 'profiles' / 'Script.js'
+    try:
+        source = script.read_text()
+    except OSError:
+        source = ''
+    literal = re.search(r'config\.dns\["fake-ip-filter"\]\s*=\s*\[\s*\.\.\.new Set\(\[\.\.\.\(config\.dns\["fake-ip-filter"\]\s*\|\|\s*\[\]\),\s*"\+\."\s*\+\s*companyDomain,\s*"' + re.escape(host) + r'"\]\)', source)
+    check('diagnostic_fake_ip_persistent', 'PASS' if literal else 'UNVERIFIED',
+          'Inspect known literal only; script is never executed')
+    return checks, {'configuration_status': 'PASS' if all(c['status'] == 'PASS' for c in checks) else 'ATTENTION',
+                    'actual_exit_status': 'NOT_RUN', 'https_record_status': 'NOT_RUN', 'ech_status': 'NOT_RUN',
+                    'detail': 'No external probes; historical ECH or exit results are not current evidence.'}
+
+
 def audit(ctx, policy, live):
     root, uid, target, extension, runtime = ctx
     checks = []
@@ -995,11 +1037,14 @@ def audit(ctx, policy, live):
     checks.extend(dns_checks)
     auxiliary_checks, auxiliary_report = audit_desktop_auxiliary(extension, runtime, policy, live)
     checks.extend(auxiliary_checks)
+    diagnostic_checks, diagnostic_report = audit_diagnostic_site(root, extension, runtime, policy, live)
+    checks.extend(diagnostic_checks)
     return {'profile_uid': uid, 'rules_file': str(target), 'checks': checks,
             'configuration_status': 'PASS' if all(c['status'] == 'PASS' for c in checks) else 'ATTENTION',
             'observed_connections': observed, 'protected_config_inventory': protected,
             'dns': dns_report,
             'desktop_auxiliary': auxiliary_report,
+            'diagnostic_site': diagnostic_report,
             'proposed_rules': proposed,
             'actual_exit_tests': 'PENDING: use real browser, desktop connections and separate STUN tests; static PASS is insufficient'}
 

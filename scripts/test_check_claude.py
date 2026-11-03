@@ -70,6 +70,31 @@ class RuleTests(unittest.TestCase):
         self.assertEqual(m.first_target(normalized, POLICY['intercom_host'], 'Claude Helper'), POLICY['fixed_proxy'])
 
 
+class DiagnosticSiteTests(unittest.TestCase):
+    def test_exact_rules_filter_and_live_priority(self):
+        fixed = POLICY['fixed_proxy']
+        hosts = POLICY['diagnostic_site']['fixed_domains']
+        rules = ['DOMAIN,' + h + ',' + fixed for h in hosts]
+        api = [{'type': 'Domain', 'payload': h, 'proxy': fixed} for h in hosts]
+        runtime = {'rules': rules, 'dns': {'fake-ip-filter': ['who.1ms.dog']}}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'profiles').mkdir()
+            (root / 'profiles/Script.js').write_text('config.dns["fake-ip-filter"] = [\n    ...new Set([...(config.dns["fake-ip-filter"] || []), "+." + companyDomain, "who.1ms.dog"]),\n  ];')
+            checks, report = m.audit_diagnostic_site(root, {'prepend': rules}, runtime, POLICY,
+                                                       {'rules': {'rules': api}})
+            self.assertTrue(all(x['status'] == 'PASS' for x in checks))
+            self.assertEqual(report['ech_status'], 'NOT_RUN')
+            self.assertEqual(report['actual_exit_status'], 'NOT_RUN')
+            api.insert(0, {'type': 'Domain', 'payload': hosts[0], 'proxy': 'DIRECT'})
+            runtime['dns']['fake-ip-filter'] = []
+            checks, _ = m.audit_diagnostic_site(root, {'prepend': rules}, runtime, POLICY,
+                                                {'rules': {'rules': api}})
+            states = {x['item']: x['status'] for x in checks}
+            self.assertEqual(states['diagnostic_live:' + hosts[0]], 'FAIL')
+            self.assertEqual(states['diagnostic_fake_ip_exception'], 'FAIL')
+
+
 class FileTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()

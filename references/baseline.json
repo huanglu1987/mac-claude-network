@@ -16,6 +16,11 @@
   "stun_hosts": ["stun.l.google.com", "stun.cloudflare.com"],
   "intercom_host": "nexus-websocket-a.intercom.io",
   "intercom_process": "Claude Helper",
+  "diagnostic_site": {
+    "confirmed_at": "2026-11-03",
+    "fixed_domains": ["who.1ms.dog", "myip.ipip.net", "api.ip.sb", "www.cloudflare.com"],
+    "fake_ip_exempt_domain": "who.1ms.dog"
+  },
   "desktop_auxiliary": {
     "confirmed_at": "2026-10-22",
     "process_name": "Claude Helper",

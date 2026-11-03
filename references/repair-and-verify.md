@@ -61,6 +61,13 @@ Claude Code/MCP 保护路径（只列存在情况/哈希，不展示值）：`~/
 
 证据：[修复与验证报告](/Users/huanglu/Documents/Codex/2026-10-16/new-chat/outputs/Claude桌面辅助连接修复-20261022-223031/修复与验证报告.md)，同目录 `verification-final.json`、`audit-final.json`、`help-panel-connections.json`、`desktop-final-connections.json`、`scoped-old-connections-closed.json`、`business-connection-checks.json`、`rule-scope-checks.json`。网络私有备份路径见该报告，可能含凭据，不复制到Skill或输出。
 
+## 检测网站分流与 ECH 记录
+
+- 2026-11-02 至 11-03（纽约时间），用户分别授权将 `who.1ms.dog`、`myip.ipip.net`、`api.ip.sb` 和 `www.cloudflare.com` 的精确域名路由至 IPRoyal 固定出口；其他 Cloudflare 域名、Claude、ChatGPT 和公司业务规则保留原策略。检测站规则扩展备份：`/Users/huanglu/.codex/backups/detection-exact-rules-20261102-220838/r5d9fDUaEDCs.yaml`。`myip.ipip.net` 因此反映代理出口，不再适合作为直连公网出口对照。
+- 2026-11-03 用户授权仅将 `who.1ms.dog` 加入 `profiles/Script.js` 中 fake-IP 黑名单例外，并重新激活原订阅；备份为 `/Users/huanglu/.codex/backups/ech-fake-ip-20261103-013332/Script.js`。当次本机 HTTPS（Type 65）查询从空答案变为一条包含 ECH 参数的记录，网页当次出口为 `207.90.214.106`；网页仍显示 ECH 未生效。**返回 HTTPS 记录不等于 Chrome 已成功执行 ECH 握手**。未捕获 Chrome 的完整解析和握手证据，不能判定其原因。
+- 同次附近的独立 Cloudflare Radar IPv4 测试域名 `ipv4-check-perf.radar.cloudflare.com` 命中原 `cloudflare.com` 后缀策略并走 DIRECT，返回国内出口；检测页的 `claude.ai/cdn-cgi/trace` 样本走 IPRoyal。它们是不同请求，不能用前者断言 Claude 直连，也不能用后者保证桌面端、Code 或所有辅助请求的出口。网站对国别的推断可基于浏览器语言，不等同账号身份或封禁原因。
+- 默认审计不触发外网查询、网页重测、缓存清理或 ECH 握手。需要实际复测时单独记录时间与测试路径，并区分持久配置、内核选路、DNS 答案、服务器看到的出口和网页 ECH 报告；失败或无样本保持未验证，不自动更改 fake-IP、DNS、策略组或其他域名。修改特定例外须另有明确授权并保留公司 OA、NC、邮件和飞书策略。
+
 ## Word、Excel 和 Chrome 插件连接观察
 
 仅在用户要求检查插件时使用：先只读核对当前配置和已有 Mihomo 连接元数据，按目标域名、连接开始时间、进程、代理链及双向字节记录，不读取请求载荷、聊天、文档、Cookie 或凭据。若用户愿意配合，可让其关闭其他两个插件面板、分别重新打开一个面板后立即采样；不要发送消息或选择文档内容。旧连接和未变化的流量不能当作新操作样本。短连接可能在采样前结束，无样本应标记未验证；WebKit、Chrome 网络进程可能由多个应用、扩展或标签共用，时间相符只是支持归因的证据，不是唯一归属证明。
