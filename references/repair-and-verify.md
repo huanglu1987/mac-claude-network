@@ -61,6 +61,13 @@ Claude Code/MCP 保护路径（只列存在情况/哈希，不展示值）：`~/
 
 证据：[修复与验证报告](/Users/huanglu/Documents/Codex/2026-10-16/new-chat/outputs/Claude桌面辅助连接修复-20261022-223031/修复与验证报告.md)，同目录 `verification-final.json`、`audit-final.json`、`help-panel-connections.json`、`desktop-final-connections.json`、`scoped-old-connections-closed.json`、`business-connection-checks.json`、`rule-scope-checks.json`。网络私有备份路径见该报告，可能含凭据，不复制到Skill或输出。
 
+## GLOBAL 选择与全局测试记录
+
+- 2026-11-03（纽约时间）用户授权仅将 GLOBAL 从美国 01 改选为 `🇺🇸 IPRoyal 固定出口`，保持 `🚀 节点选择` 为美国 01、Claude 组为 IPRoyal，且维持规则模式。更改前状态记录：`/Users/huanglu/.codex/backups/global-selection-20261103-094623/before.json`。GLOBAL 是全局模式的策略选择，不等于 IPRoyal 所用的前置组；规则模式按原规则与各策略组分流。
+- 同日约 09:50 用户授权短暂切换全局模式做单次测试，测试期间 GLOBAL 选择 IPRoyal；通过本机 Clash 代理访问 `claude.ai/cdn-cgi/trace` 返回 `ip=207.90.214.106`、`loc=US`、HTTP/2、TLS 1.3。**未捕获到可归属于该次短连接的 Clash 连接记录**，因此这只是该检测请求的出口实测，不证明所有应用、DNS 或 IPv6 都走同一出口，也不能由此认定账号状态。
+- 测试通过本地控制接口切换与恢复；结束后回读模式为 `rule`、TUN 开启，全部可读取的策略组选择与测试前一致；当次配置审计 92 项通过。测试前状态记录：`/Users/huanglu/.codex/backups/global-test-20261103-095038/before.json`。当次未验证 Clash 重启或订阅重载后的 GLOBAL 选择是否保留，也未实际测试 OA、NC、邮件和飞书业务连接。
+- 默认仅读取当前模式与选择，不切换节点、不启用全局、不发外网请求。用户另行明确授权临时测试时先记录原模式及策略组，验证单次真实出口与可用的连接证据，再恢复原模式并回读；配置与历史测试不能代替新样本。公司业务可能受全局模式影响，不要擅自变更其例外或规则。
+
 ## 检测网站分流与 ECH 记录
 
 - 2026-11-02 至 11-03（纽约时间），用户分别授权将 `who.1ms.dog`、`myip.ipip.net`、`api.ip.sb` 和 `www.cloudflare.com` 的精确域名路由至 IPRoyal 固定出口；其他 Cloudflare 域名、Claude、ChatGPT 和公司业务规则保留原策略。检测站规则扩展备份：`/Users/huanglu/.codex/backups/detection-exact-rules-20261102-220838/r5d9fDUaEDCs.yaml`。`myip.ipip.net` 因此反映代理出口，不再适合作为直连公网出口对照。
